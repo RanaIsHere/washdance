@@ -29,6 +29,6 @@ class ActivityLogs extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('activity_logs');
     }
 }
