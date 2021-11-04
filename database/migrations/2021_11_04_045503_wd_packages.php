@@ -16,9 +16,9 @@ class WdPackages extends Migration
         Schema::create('wd_packages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('outlet_id');
-            $table->enum('package_type', ['CURTAIN', 'BLANKET', 'BED_COVER', 'SPECIAL_SHIRT', 'SUIT', 'STANDARD']);
+            $table->enum('package_type', config('enums.package_type'));
             $table->string('package_name', 100);
-            $table->double('pacckage_price');
+            $table->double('package_price');
             $table->timestamps();
         });
     }

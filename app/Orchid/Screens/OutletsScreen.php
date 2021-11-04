@@ -2,11 +2,13 @@
 
 namespace App\Orchid\Screens;
 
+use App\Models\Outlets;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Screen;
+use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
 
 class OutletsScreen extends Screen
@@ -75,6 +77,17 @@ class OutletsScreen extends Screen
             'outlet_status' => ['required']
         ]);
 
-        dd($validatedData);
+        $outlets = new Outlets;
+
+        $outlets->outlet_name = $validatedData['outlet_name'];
+        $outlets->outlet_address = $validatedData['outlet_address'];
+        $outlets->outlet_phone = $validatedData['outlet_phone'];
+        $outlets->status = $validatedData['outlet_status'];
+
+        if ($outlets->save()) {
+            Alert::success("Outlet succesfully registered.");
+        } else {
+            Alert::error("Outlet cannot be registered.");
+        }
     }
 }

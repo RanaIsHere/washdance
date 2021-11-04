@@ -63,4 +63,9 @@ class User extends Authenticatable
         'updated_at',
         'created_at',
     ];
+
+    public function transactions()
+    {
+        return $this->hasMany(Transactions::class, 'user_id');
+    }
 }
