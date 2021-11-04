@@ -41,13 +41,14 @@ class PlatformProvider extends OrchidServiceProvider
                 ->list([
                     Menu::make('Outlet Registration')->route('platform.outlets')->icon('bag'),
                     Menu::make('Package Registration')->route('platform.packages')->icon('bag'),
+                    Menu::make('Memberships')->route('platform.memberships')->icon('bag'),
                     Menu::make(__('Users'))->icon('user')->route('platform.systems.users')->permission('platform.systems.users')
                 ]),
 
             Menu::make('Member Registration')
                 ->title('Cashier')
                 ->icon('note')
-                ->route('platform.example.fields'),
+                ->route('platform.members'),
 
             Menu::make('Transactions')
                 ->icon('briefcase')

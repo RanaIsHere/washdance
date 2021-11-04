@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Members;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
 use App\Orchid\Screens\Examples\ExampleChartsScreen;
 use App\Orchid\Screens\Examples\ExampleFieldsAdvancedScreen;
@@ -9,6 +10,9 @@ use App\Orchid\Screens\Examples\ExampleFieldsScreen;
 use App\Orchid\Screens\Examples\ExampleLayoutsScreen;
 use App\Orchid\Screens\Examples\ExampleScreen;
 use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
+use App\Orchid\Screens\MembershipScreen;
+use App\Orchid\Screens\MembershipsScreen;
+use App\Orchid\Screens\MembersScreen;
 use App\Orchid\Screens\OutletsScreen;
 use App\Orchid\Screens\PackageScreen;
 use App\Orchid\Screens\PlatformScreen;
@@ -113,8 +117,16 @@ Route::screen('outlets', OutletsScreen::class)
 Route::screen('packages', PackageScreen::class)
     ->name('platform.packages');
 
-Route::screen('packages', PackageScreen::class)
-    ->name('platform.packages');
+// View
+Route::screen('memberships', MembershipsScreen::class)
+    ->name('platform.memberships');
+
+// Edit
+Route::screen('membership/{member?}', MembershipScreen::class)
+    ->name('platform.membership');
+
+Route::screen('members', MembersScreen::class)
+    ->name('platform.members');
 
 Route::screen('example-fields', ExampleFieldsScreen::class)->name('platform.example.fields');
 Route::screen('example-layouts', ExampleLayoutsScreen::class)->name('platform.example.layouts');
