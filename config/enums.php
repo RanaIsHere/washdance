@@ -17,5 +17,14 @@ return [
         'SPECIAL_SHIRT',
         'SUIT',
         'STANDARD'
+    ],
+
+    'activity' => [
+        'LOGIN',
+        'REGISTER',
+        'ADD',
+        'DEL',
+        'EDIT',
+        'UPDATES'
     ]
 ];
