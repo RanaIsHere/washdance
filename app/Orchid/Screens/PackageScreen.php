@@ -86,21 +86,23 @@ class PackageScreen extends Screen
                     )
                 ]),
 
+                // TODO : Possible error with package selection types. Can come up empty or chosen wrong types.
                 'Registration' => Layout::rows([
                     Relation::make('outlet_id')->title('Outlet ID')->required()->placeholder('Outlet ID')->fromModel(Outlets::class, 'outlet_name', 'id'),
                     Select::make('package_type')
                         ->options(config('enums.package_type'))
                         ->title('Package Types')
                         ->required(),
-                    Input::make('package_name')->title('Package Name')->required()->placeholder('Super Cleaner 1000 Standard'),
-                    Input::make('package_price')->title('Package Price')
-                        ->mask([
-                            'alias' => 'currency',
-                            'prefix' => 'Rp. ',
-                            'groupSeparator' => ',',
-                            'digitsOptional' => true,
-                            'numericInput' => true
-                        ])
+                    Input::make('package_name')
+                        ->title('Package Name')
+                        ->required()
+                        ->placeholder('Super Cleaner 1000 Standard')
+                        ->help('Package names has to be unique. <br> <span class="fw-bold text-danger"> A recommended format is (Package Name) (Price) (Outlet Name) </span>'),
+                    Input::make('package_price')
+                        ->type('number')
+                        ->title('Package Price')
+                        ->placeholder('Rp.')
+                        ->help('This franchise only accepts IDR (Rp.)')
                         ->required()
                 ])
             ]),
@@ -118,6 +120,12 @@ class PackageScreen extends Screen
 
         $package_price = str_replace(['Rp.', '.', ',', ' '], "", $validatedData['package_price']);
 
+        if (Packages::where('package_name', $validatedData['package_name'])->first() != null) {
+            Alert::error("Package name MUST be unique.");
+
+            return redirect()->route('platform.packages');
+        }
+
         $packages = new Packages;
 
         $packages->outlet_id = $validatedData['outlet_id'];
@@ -128,7 +136,7 @@ class PackageScreen extends Screen
         if ($packages->save()) {
             Alert::success("Package succesfully registered.");
         } else {
-            Alert::error("Package cannot be registered.");
+            Alert::error("Package cannot be registered. Check registration data all over again.");
         }
     }
 }

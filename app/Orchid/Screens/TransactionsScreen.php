@@ -7,14 +7,20 @@ use App\Models\Outlets;
 use App\Models\Packages;
 use App\Models\TransactionDetails;
 use App\Models\Transactions;
+use App\Models\User;
+use App\Notifications\TransactionFailed;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Matrix;
 use Orchid\Screen\Fields\Quill;
 use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\Screen;
+use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
 
 class TransactionsScreen extends Screen
@@ -77,23 +83,44 @@ class TransactionsScreen extends Screen
                         ->title('Members')
                         ->required()
                         ->help("Pick the member that you are interacting with."),
-
-                    Relation::make('package_id.')
-                        ->fromModel(Packages::class, 'package_name', 'id')
-                        ->multiple()
-                        ->title('Packages')
+                    Select::make('transaction_discount')
+                        ->options([
+                            0 => 'No Discount',
+                            10 => '10% Discount',
+                            20 => '20% Discount',
+                            30 => '30% Discount'
+                        ])
+                        ->title('Discount')
                         ->required()
-                        ->help("Pick the member that you are interacting with."),
-                ]),
+                        ->help('Discounts are good.'),
 
-                Layout::table('wd_packages', []),
+                    // Relation::make('package_id.')
+                    //     ->fromModel(Packages::class, 'package_name', 'id')
+                    //     ->multiple()
+                    //     ->title('Packages')
+                    //     ->required()
+                    //     ->help("Pick the member that you are interacting with."),
 
-                Layout::rows([
                     Quill::make('notes')
                         ->title('Important Notes')
                         ->help("A member may have a request to the outlet, and it is your job to add that to this row. <br> Keep in mind that this is required to have some text. <br> <span class='text-danger fw-bold'> Be warned that short deadlines are not permitted. </span>")
                         ->toolbar(['text', 'color', 'list'])
                         ->value("Customer did not request anything, or their request were not allowed.")
+                ]),
+
+                // Layout::table('wd_packages', []),
+
+                Layout::rows([
+                    Matrix::make('package_id')
+                        ->columns([
+                            'Package' => 'package_id',
+                            'Quantity' => 'quantity'
+                        ])
+                        ->title('Packages')
+                        ->fields([
+                            'package_id' => Select::make('package_id')->fromModel(Packages::class, 'package_name', 'id')->required(),
+                            'quantity' => Input::make()->type('number')->required()->min(1)
+                        ])
                 ])
             ])
         ];
@@ -101,7 +128,77 @@ class TransactionsScreen extends Screen
 
     public function addTransactions(Request $request)
     {
-        $validatedData = $request->all();
-        dd($validatedData);
+        $validatedData = $request->validate([
+            'outlet_id' => ['required'],
+            'member_id' => ['required'],
+            'transaction_discount' => ['required'],
+            'notes' => ['required'],
+            'package_id' => ['required']
+        ]);
+        // dd($validatedData);
+
+        $user = User::all();
+        $transactions = new Transactions;
+
+        $transactions->outlet_id = $validatedData['outlet_id'];
+        $transactions->user_id = Auth::user()->id;
+        $transactions->member_id = $validatedData['member_id'];
+        $transactions->invoice_code = 'TCP';
+        $transactions->transaction_date = now();
+        $transactions->transaction_deadline = now()->addDays(4);
+        $transactions->transaction_paydate = now()->addDays(5);
+        $transactions->transaction_paid = 0;
+        $transactions->transaction_paid_extra = 0;
+        $transactions->transaction_discount = $validatedData['transaction_discount'];
+        $transactions->transaction_tax = 0;
+        $transactions->status = 'NEW';
+        $transactions->paid_status = 'UNPAID';
+
+        if ($transactions->save()) {
+            $tax = 0;
+
+            foreach ($validatedData['package_id'] as $i => $pkg) {
+                // dump($validatedData['package_id'][$i]);
+
+                $transaction_details = new TransactionDetails;
+
+                $transaction_details->transaction_id = $transactions->id;
+                $transaction_details->package_id = $validatedData['package_id'][$i]['package_id'];
+                $transaction_details->quantity = $validatedData['package_id'][$i]['quantity'];
+                $transaction_details->notes = $validatedData['notes'];
+
+                if ($transaction_details->save()) {
+                    $cash = $transaction_details->packages->package_price * (int)$validatedData['package_id'][$i]['quantity'];
+                    $tax += ((2 / 100) * $cash);
+                    $discountedCash = ($transactions->transaction_discount / 100) * $cash;
+                    $total = ($tax + $discountedCash);
+
+                    $transactions->invoice_code = 'TCP' . $transactions->member_id . $transactions->user_id . $transactions->id;
+                    $transactions->transaction_paid = $total;
+                    $transactions->transaction_paid_extra = $tax;
+                    $transactions->transaction_tax = $tax;
+
+                    if ($transactions->update()) {
+                        Alert::success('Transaction\'s successful!');
+                    } else {
+                        Alert::warning('Transaction\'s failed!');
+                        break;
+                    }
+                } else {
+                    Alert::warning('Transaction failed! Contact your nearest administrator of your outlet for consultation with this issue!');
+                    break;
+                }
+            }
+        } else {
+            Alert::warning('Transaction failed! Contact your nearest administrator of your outlet for consultation with this issue!');
+            Notification::send($user, new TransactionFailed);
+        }
+        // for ($i = 0; $i != count($validatedData['package_id']); $i++) {
+        //     if (in_array($i, $validatedData['package_id'][$i])) {
+        //         dump($validatedData['package_id'][$i]);
+        //     }
+        // }
+
+        // dd($validatedData);
     }
 }

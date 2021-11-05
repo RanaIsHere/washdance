@@ -17,7 +17,7 @@ class WdPackages extends Migration
             $table->id();
             $table->foreignId('outlet_id');
             $table->enum('package_type', config('enums.package_type'));
-            $table->string('package_name', 100);
+            $table->string('package_name', 100)->unique()->nullable();
             $table->double('package_price');
             $table->timestamps();
         });
