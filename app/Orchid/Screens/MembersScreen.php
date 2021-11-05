@@ -10,6 +10,7 @@ use Orchid\Screen\Fields\Quill;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Fields\TextArea;
 use Orchid\Screen\Screen;
+use Orchid\Screen\TD;
 use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
 
@@ -30,7 +31,9 @@ class MembersScreen extends Screen
      */
     public function query(): array
     {
-        return [];
+        return [
+            'wd_members' => Members::filters()->paginate()
+        ];
     }
 
     /**
@@ -53,11 +56,41 @@ class MembersScreen extends Screen
     public function layout(): array
     {
         return [
-            Layout::rows([
-                Input::make('member_name')->title('Member name')->required()->placeholder('The name of this member'),
-                TextArea::make('member_address')->title('Member address')->required()->placeholder('The address of this member'),
-                Input::make('member_phone')->mask('+(99) 999 9999-9999')->title('Member phone number')->required(),
-                Select::make('gender')->options(['MALE' => 'MALE', 'FEMALE' => 'FEMALE'])->title('Gender')->required()
+            Layout::tabs([
+                'List' => Layout::table('wd_members', [
+                    TD::make('id', 'ID')->render(
+                        function (Members $members) {
+                            return $members->id;
+                        }
+                    ),
+                    TD::make('member_name', 'MEMBER NAME')->filter(Input::make())->render(
+                        function (Members $members) {
+                            return $members->member_name;
+                        }
+                    ),
+                    TD::make('member_address', 'MEMBER ADDRESS')->render(
+                        function (Members $members) {
+                            return $members->member_address;
+                        }
+                    ),
+                    TD::make('member_phone', 'MEMBER PHONE')->filter(Input::make())->render(
+                        function (Members $members) {
+                            return $members->member_phone;
+                        }
+                    ),
+                    TD::make('gender', 'GENDER')->filter(Input::make()->datalist(['MALE', 'FEMALE']))->render(
+                        function (Members $members) {
+                            return $members->gender;
+                        }
+                    ),
+                ]),
+
+                'Registration' => Layout::rows([
+                    Input::make('member_name')->title('Member name')->required()->placeholder('The name of this member'),
+                    TextArea::make('member_address')->title('Member address')->required()->placeholder('The address of this member'),
+                    Input::make('member_phone')->mask('+(99) 999 9999-9999')->title('Member phone number')->required(),
+                    Select::make('gender')->options(['MALE' => 'MALE', 'FEMALE' => 'FEMALE'])->title('Gender')->required()
+                ]),
             ])
         ];
     }

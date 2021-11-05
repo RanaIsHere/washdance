@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens;
 
 use App\Models\Members;
+use App\Orchid\Filters\PackageFilter;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\Link;
@@ -32,7 +33,7 @@ class MembershipsScreen extends Screen
     public function query(): array
     {
         return [
-            'wd_members' => Members::all()
+            'wd_members' => Members::filters()->paginate()
         ];
     }
 
@@ -60,7 +61,7 @@ class MembershipsScreen extends Screen
                         return $members->id;
                     }
                 ),
-                TD::make('member_name', 'MEMBER NAME')->render(
+                TD::make('member_name', 'MEMBER NAME')->filter(Input::make())->render(
                     function (Members $members) {
                         return $members->member_name;
                     }
@@ -70,12 +71,12 @@ class MembershipsScreen extends Screen
                         return $members->member_address;
                     }
                 ),
-                TD::make('member_phone', 'MEMBER PHONE')->render(
+                TD::make('member_phone', 'MEMBER PHONE')->filter(Input::make())->render(
                     function (Members $members) {
                         return $members->member_phone;
                     }
                 ),
-                TD::make('gender', 'GENDER')->render(
+                TD::make('gender', 'GENDER')->filter(Input::make())->render(
                     function (Members $members) {
                         return $members->gender;
                     }
