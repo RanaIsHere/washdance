@@ -114,7 +114,8 @@ class MembersScreen extends Screen
         $members->member_phone = $validatedData['member_phone'];
 
         if ($members->save()) {
-            Alert::success('Member has been successfully registered on the system.');
+            Alert::success('Member has been successfully registered on the system. Proceed into the transactions phase.');
+            return redirect()->route('platform.transactions');
         } else {
             Alert::warning('Member has failed to register on the system!');
         }

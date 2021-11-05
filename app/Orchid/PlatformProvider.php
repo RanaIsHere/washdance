@@ -46,7 +46,6 @@ class PlatformProvider extends OrchidServiceProvider
                         ->icon('lock')
                         ->route('platform.systems.roles')
                         ->permission('platform.systems.admin')
-                        ->title(__('Access rights'))
                 ])->permission('platform.systems.admin'),
 
             // Cashier Permissions Required
