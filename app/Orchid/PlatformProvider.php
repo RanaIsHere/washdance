@@ -18,8 +18,6 @@ class PlatformProvider extends OrchidServiceProvider
     public function boot(Dashboard $dashboard): void
     {
         parent::boot($dashboard);
-
-        // ...
     }
 
     /**
@@ -34,43 +32,43 @@ class PlatformProvider extends OrchidServiceProvider
                 ->title('Admin')
                 ->badge(function () {
                     return 6;
-                }),
+                })->permission('platform.systems.admin'),
 
             Menu::make('Administration')
                 ->icon('heart')
                 ->list([
-                    Menu::make('Outlet Registration')->route('platform.outlets')->icon('bag'),
-                    Menu::make('Package Registration')->route('platform.packages')->icon('bag'),
-                    Menu::make('Memberships')->route('platform.memberships')->icon('bag'),
-                    Menu::make(__('Users'))->icon('user')->route('platform.systems.users')->permission('platform.systems.users')
-                ]),
+                    Menu::make('Outlet Registration')->route('platform.outlets')->icon('bag')->permission('platform.systems.admin'),
+                    Menu::make('Package Registration')->route('platform.packages')->icon('bag')->permission('platform.systems.admin'),
+                    Menu::make('Memberships')->route('platform.memberships')->icon('bag')->permission('platform.systems.admin'),
+                    Menu::make(__('Users'))->icon('user')->route('platform.systems.users')->permission('platform.systems.admin')
+                ])->permission('platform.systems.admin'),
 
             Menu::make('Member Registration')
                 ->title('Cashier')
                 ->icon('note')
-                ->route('platform.members'),
+                ->route('platform.members')->permission('platform.systems.cashier'),
 
             Menu::make('Transactions')
                 ->icon('briefcase')
-                ->route('platform.example.advanced'),
+                ->route('platform.transactions')->permission('platform.systems.cashier'),
 
             Menu::make('Invoices')
                 ->icon('list')
-                ->route('platform.example.editors'),
+                ->route('platform.example.editors')->permission('platform.systems.cashier'),
 
             Menu::make('Company Overview')
                 ->title('Overview')
                 ->icon('layers')
-                ->route('platform.example.layouts'),
+                ->route('platform.example.layouts')->permission('platform.systems.owner'),
 
             Menu::make('Company Chart')
                 ->icon('bar-chart')
-                ->route('platform.example.charts'),
+                ->route('platform.example.charts')->permission('platform.systems.owner'),
 
             Menu::make('Blog')
                 ->icon('grid')
                 ->route('platform.example.cards')
-                ->divider(),
+                ->divider()->permission('platform.systems.owner'),
 
             // Menu::make('Documentation')
             //     ->title('Docs')
@@ -113,7 +111,10 @@ class PlatformProvider extends OrchidServiceProvider
         return [
             ItemPermission::group(__('System'))
                 ->addPermission('platform.systems.roles', __('Roles'))
-                ->addPermission('platform.systems.users', __('Users')),
+                ->addPermission('platform.systems.users', __('Users'))
+                ->addPermission('platform.systems.admin', __('Admin'))
+                ->addPermission('platform.systems.cashier', __('Cashier'))
+                ->addPermission('platform.systems.owner', __('Owner')),
         ];
     }
 }

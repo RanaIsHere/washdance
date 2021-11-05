@@ -18,6 +18,7 @@ use App\Orchid\Screens\PackageScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
+use App\Orchid\Screens\TransactionsScreen;
 use App\Orchid\Screens\User\UserEditScreen;
 use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
@@ -111,22 +112,27 @@ Route::screen('example', ExampleScreen::class)
             ->push('Example screen');
     });
 
-Route::screen('outlets', OutletsScreen::class)
-    ->name('platform.outlets');
+Route::middleware(['access:platform.systems.admin'])->group(function () {
+    Route::screen('outlets', OutletsScreen::class)
+        ->name('platform.outlets');
 
-Route::screen('packages', PackageScreen::class)
-    ->name('platform.packages');
+    Route::screen('packages', PackageScreen::class)
+        ->name('platform.packages');
 
-// View
-Route::screen('memberships', MembershipsScreen::class)
-    ->name('platform.memberships');
+    // View
+    Route::screen('memberships', MembershipsScreen::class)
+        ->name('platform.memberships');
 
-// Edit
-Route::screen('membership/{member?}', MembershipScreen::class)
-    ->name('platform.membership');
+    // Edit
+    Route::screen('membership/{member?}', MembershipScreen::class)
+        ->name('platform.membership');
+});
 
 Route::screen('members', MembersScreen::class)
     ->name('platform.members');
+
+Route::screen('transactions', TransactionsScreen::class)
+    ->name('platform.transactions');
 
 Route::screen('example-fields', ExampleFieldsScreen::class)->name('platform.example.fields');
 Route::screen('example-layouts', ExampleLayoutsScreen::class)->name('platform.example.layouts');
