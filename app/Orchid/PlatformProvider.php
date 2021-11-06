@@ -41,7 +41,10 @@ class PlatformProvider extends OrchidServiceProvider
                     Menu::make('Outlet Registration')->route('platform.outlets')->icon('bag')->permission('platform.systems.admin'),
                     Menu::make('Package Registration')->route('platform.packages')->icon('bag')->permission('platform.systems.admin'),
                     Menu::make('Memberships')->route('platform.memberships')->icon('bag')->permission('platform.systems.admin'),
-                    Menu::make(__('Users'))->icon('user')->route('platform.systems.users')->permission('platform.systems.admin'),
+                    Menu::make(__('Users'))
+                        ->icon('user')
+                        ->route('platform.systems.users')
+                        ->permission('platform.systems.admin'),
                     Menu::make(__('Roles'))
                         ->icon('lock')
                         ->route('platform.systems.roles')

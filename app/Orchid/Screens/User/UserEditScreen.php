@@ -39,7 +39,7 @@ class UserEditScreen extends Screen
     /**
      * @var string
      */
-    public $permission = 'platform.systems.users';
+    public $permission = 'platform.systems.admin';
 
     /**
      * @var User
@@ -57,7 +57,7 @@ class UserEditScreen extends Screen
     {
         $this->user = $user;
 
-        if (! $user->exists) {
+        if (!$user->exists) {
             $this->name = 'Create User';
         }
 
