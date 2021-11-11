@@ -10,6 +10,8 @@ use App\Orchid\Screens\Examples\ExampleFieldsScreen;
 use App\Orchid\Screens\Examples\ExampleLayoutsScreen;
 use App\Orchid\Screens\Examples\ExampleScreen;
 use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
+use App\Orchid\Screens\InvoiceScreen;
+use App\Orchid\Screens\InvoicesScreen;
 use App\Orchid\Screens\MembershipScreen;
 use App\Orchid\Screens\MembershipsScreen;
 use App\Orchid\Screens\MembersScreen;
@@ -134,6 +136,12 @@ Route::middleware(['access:platform.systems.cashier'])->group(function () {
 
     Route::screen('transactions', TransactionsScreen::class)
         ->name('platform.transactions');
+
+    Route::screen('invoices', InvoicesScreen::class)
+        ->name('platform.invoices');
+
+    Route::screen('invoice/{transactions?}', InvoiceScreen::class)
+        ->name('platform.invoice');
 });
 
 Route::screen('example-fields', ExampleFieldsScreen::class)->name('platform.example.fields');

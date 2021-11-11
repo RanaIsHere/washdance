@@ -63,7 +63,7 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make('Invoices')
                 ->icon('list')
-                ->route('platform.example.editors')->permission('platform.systems.cashier'),
+                ->route('platform.invoices')->permission('platform.systems.cashier'),
 
             // Owner Permissions Required
             Menu::make('Company Overview')

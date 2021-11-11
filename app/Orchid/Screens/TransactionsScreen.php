@@ -94,21 +94,12 @@ class TransactionsScreen extends Screen
                         ->required()
                         ->help('Discounts are good.'),
 
-                    // Relation::make('package_id.')
-                    //     ->fromModel(Packages::class, 'package_name', 'id')
-                    //     ->multiple()
-                    //     ->title('Packages')
-                    //     ->required()
-                    //     ->help("Pick the member that you are interacting with."),
-
                     Quill::make('notes')
                         ->title('Important Notes')
                         ->help("A member may have a request to the outlet, and it is your job to add that to this row. <br> Keep in mind that this is required to have some text. <br> <span class='text-danger fw-bold'> Be warned that short deadlines are not permitted. </span>")
                         ->toolbar(['text', 'color', 'list'])
                         ->value("Customer did not request anything, or their request were not allowed.")
                 ]),
-
-                // Layout::table('wd_packages', []),
 
                 Layout::rows([
                     Matrix::make('package_id')
@@ -193,12 +184,5 @@ class TransactionsScreen extends Screen
             Alert::warning('Transaction failed! Contact your nearest administrator of your outlet for consultation with this issue!');
             Notification::send($user, new TransactionFailed);
         }
-        // for ($i = 0; $i != count($validatedData['package_id']); $i++) {
-        //     if (in_array($i, $validatedData['package_id'][$i])) {
-        //         dump($validatedData['package_id'][$i]);
-        //     }
-        // }
-
-        // dd($validatedData);
     }
 }
