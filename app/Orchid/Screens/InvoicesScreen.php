@@ -6,6 +6,8 @@ use App\Models\TransactionDetails;
 use App\Models\Transactions;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Actions\DropDown;
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Screen;
 use Orchid\Screen\TD;
@@ -54,35 +56,42 @@ class InvoicesScreen extends Screen
         return [
             Layout::table('wd_transactions', [
                 TD::make('id', 'ID')->render(
-                    function (Transactions $transactions) {
-                        return $transactions->id;
+                    function (Transactions $transaction) {
+                        return $transaction->id;
                     }
                 ),
                 TD::make('outlet_id', 'OUTLET ID')->render(
-                    function (Transactions $transactions) {
-                        return $transactions->outlet_id;
+                    function (Transactions $transaction) {
+                        return $transaction->outlet_id;
                     }
                 ),
                 TD::make('invoice_code', 'INVOICE CODE')->render(
-                    function (Transactions $transactions) {
-                        return $transactions->invoice_code;
+                    function (Transactions $transaction) {
+                        return $transaction->invoice_code;
                     }
                 ),
                 TD::make('transaction_date', 'TRANSACTION DATE')->render(
-                    function (Transactions $transactions) {
-                        return $transactions->transaction_date;
+                    function (Transactions $transaction) {
+                        return $transaction->transaction_date;
                     }
                 ),
                 TD::make('paid_status', 'STATUS')->render(
-                    function (Transactions $transactions) {
-                        return $transactions->paid_status;
+                    function (Transactions $transaction) {
+                        return $transaction->paid_status;
                     }
                 ),
                 TD::make('view', 'ACTIONS')->render(
-                    function (Transactions $transactions) {
-                        return Button::make('View Invoices')
-                            ->class('btn btn-primary')
-                            ->route('platform.invoice', $transactions);
+                    function (Transactions $transaction) {
+                        return DropDown::make()
+                            ->icon('options-vertical')
+                            ->list([
+                                Link::make('View Invoice')
+                                    ->class('btn')
+                                    ->route('platform.invoice', $transaction),
+                                Link::make('Edit Invoice')
+                                    ->class('btn')
+                                    ->route('platform.invoice.edit', $transaction)
+                            ]);
                     }
                 )
             ])

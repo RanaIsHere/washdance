@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Members;
+use App\Orchid\Screens\EditInvoiceScreen;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
 use App\Orchid\Screens\Examples\ExampleChartsScreen;
 use App\Orchid\Screens\Examples\ExampleFieldsAdvancedScreen;
@@ -140,7 +141,10 @@ Route::middleware(['access:platform.systems.cashier'])->group(function () {
     Route::screen('invoices', InvoicesScreen::class)
         ->name('platform.invoices');
 
-    Route::screen('invoice/{transactions?}', InvoiceScreen::class)
+    Route::screen('invoice/edit/{transaction?}', EditInvoiceScreen::class)
+        ->name('platform.invoice.edit');
+
+    Route::screen('invoice/{transaction?}', InvoiceScreen::class)
         ->name('platform.invoice');
 });
 
