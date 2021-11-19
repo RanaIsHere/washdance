@@ -46,7 +46,7 @@ class TransactionsScreen extends Screen
             'wd_members' => Members::all(),
             'wd_packages' => Packages::all(),
             'wd_transactions' => Transactions::all(),
-            'wd_transaction_details' => TransactionDetails::all()
+            'wd_transaction_details' => TransactionDetails::all(),
         ];
     }
 
@@ -71,6 +71,10 @@ class TransactionsScreen extends Screen
     {
         return [
             Layout::columns([
+                Layout::view('topTransactionsHeader')
+            ]),
+
+            Layout::columns([
                 Layout::rows([
                     Select::make('outlet_id')
                         ->fromModel(Outlets::class, 'outlet_name', 'id')
@@ -86,9 +90,9 @@ class TransactionsScreen extends Screen
                     Select::make('transaction_discount')
                         ->options([
                             0 => 'No Discount',
-                            10 => '10% Discount',
-                            20 => '20% Discount',
-                            30 => '30% Discount'
+                            0.10 => '10% Discount',
+                            0.20 => '20% Discount',
+                            0.30 => '30% Discount'
                         ])
                         ->title('Discount')
                         ->required()
@@ -96,8 +100,8 @@ class TransactionsScreen extends Screen
 
                     Quill::make('notes')
                         ->title('Important Notes')
-                        ->help("A member may have a request to the outlet, and it is your job to add that to this row. <br> Keep in mind that this is required to have some text. <br> <span class='text-danger fw-bold'> Be warned that short deadlines are not permitted. </span>")
                         ->toolbar(['text', 'color', 'list'])
+                        ->help("A member may have a request to the outlet, and it is your job to add that to this row. <br> Keep in mind that this is required to have some text. <br> </span>")
                         ->value("Customer did not request anything, or their request were not allowed.")
                 ]),
 
