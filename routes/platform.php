@@ -17,6 +17,7 @@ use App\Orchid\Screens\MembershipScreen;
 use App\Orchid\Screens\MembershipsScreen;
 use App\Orchid\Screens\MembersScreen;
 use App\Orchid\Screens\OutletsScreen;
+use App\Orchid\Screens\OverviewScreen;
 use App\Orchid\Screens\PackageScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\ReportsScreen;
@@ -150,6 +151,11 @@ Route::middleware(['access:platform.systems.cashier'])->group(function () {
 
     Route::screen('invoice/{transaction?}', InvoiceScreen::class)
         ->name('platform.invoice');
+});
+
+Route::middleware(['access:platform.systems.owner'])->group(function () {
+    Route::screen('overview', OverviewScreen::class)
+        ->name('platform.overview');
 });
 
 Route::screen('example-fields', ExampleFieldsScreen::class)->name('platform.example.fields');

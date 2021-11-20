@@ -67,16 +67,12 @@ class PlatformProvider extends OrchidServiceProvider
             Menu::make('Company Overview')
                 ->title('Overview')
                 ->icon('layers')
-                ->route('platform.example.layouts')->permission('platform.systems.owner'),
+                ->route('platform.overview')->permission('platform.systems.owner'),
 
-            Menu::make('Company Chart')
-                ->icon('bar-chart')
-                ->route('platform.example.charts')->permission('platform.systems.owner'),
-
-            Menu::make('Blog')
-                ->icon('grid')
-                ->route('platform.example.cards')
-                ->divider()->permission('platform.systems.owner'),
+            Menu::make('Company Reports')
+                ->icon('monitor')
+                ->route('platform.reports')
+                ->permission('platform.systems.owner'),
 
             // Menu::make('Documentation')
             //     ->title('Docs')
