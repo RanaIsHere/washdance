@@ -29,11 +29,9 @@ class PlatformProvider extends OrchidServiceProvider
             // Admin Permissions Required
             Menu::make('Reports')
                 ->icon('monitor')
-                ->route('platform.example')
+                ->route('platform.reports')
                 ->title('Admin')
-                ->badge(function () {
-                    return 6;
-                })->permission('platform.systems.admin'),
+                ->permission('platform.systems.admin'),
 
             Menu::make('Administration')
                 ->icon('heart')

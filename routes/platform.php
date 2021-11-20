@@ -19,6 +19,7 @@ use App\Orchid\Screens\MembersScreen;
 use App\Orchid\Screens\OutletsScreen;
 use App\Orchid\Screens\PackageScreen;
 use App\Orchid\Screens\PlatformScreen;
+use App\Orchid\Screens\ReportsScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
 use App\Orchid\Screens\TransactionsScreen;
@@ -62,6 +63,9 @@ Route::screen('example', ExampleScreen::class)
     });
 
 Route::middleware(['access:platform.systems.admin'])->group(function () {
+    Route::screen('reports', ReportsScreen::class)
+        ->name('platform.reports');
+
     Route::screen('outlets', OutletsScreen::class)
         ->name('platform.outlets');
 

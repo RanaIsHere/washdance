@@ -6,7 +6,10 @@ use App\Models\Transactions;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Quill;
+use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Screen;
+use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
 
 class EditInvoiceScreen extends Screen
@@ -27,7 +30,7 @@ class EditInvoiceScreen extends Screen
     public function query(Transactions $transaction): array
     {
         return [
-            'transaction' => $transaction
+            'transaction' => $transaction,
         ];
     }
 
@@ -39,7 +42,6 @@ class EditInvoiceScreen extends Screen
     public function commandBar(): array
     {
         return [
-            Button::make('Delete')->icon('trash')->method('deleteInvoice'),
             Button::make('Update')->icon('paper-plane')->method('updateInvoice')
         ];
     }
@@ -53,18 +55,49 @@ class EditInvoiceScreen extends Screen
     {
         return [
             Layout::columns([
-                Layout::view('invoice')
+                Layout::view('invoiceHeader')
+            ]),
+
+            Layout::columns([
+                Layout::view('invoiceBody')
+            ]),
+
+            Layout::columns([
+                Layout::rows([
+                    Select::make('transaction.paid_status')
+                        ->options([
+                            'UNPAID',
+                            'PAID'
+                        ])
+                        ->title('The status of the payment')
+                        ->required()
+                        ->help('Options of PAID and UNPAID in a transaction.')
+                ]),
+
+                Layout::rows([
+                    Select::make('transaction.status')
+                        ->options([
+                            'NEW',
+                            'PROCESSING',
+                            'FINISHED',
+                            'PULLED'
+                        ])
+                        ->title('The status of the transaction process')
+                        ->required()
+                        ->help('Options of NEW, PROCESSING, FINISHED, and PULLED within a transactions.')
+                ])
             ])
         ];
     }
 
-    public function deleteInvoice(Request $request)
+    public function updateInvoice(Transactions $transaction, Request $request)
     {
-        //
-    }
+        if ($transaction->fill($request->get('transaction'))->save()) {
+            Alert::success('Successfully edited an invoice!');
 
-    public function updateInvoice(Request $request)
-    {
-        //
+            return redirect()->route('platform.invoices');
+        } else {
+            Alert::warning('Editing failure!');
+        }
     }
 }
