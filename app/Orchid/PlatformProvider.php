@@ -29,11 +29,9 @@ class PlatformProvider extends OrchidServiceProvider
             // Admin Permissions Required
             Menu::make('Reports')
                 ->icon('monitor')
-                ->route('platform.example')
+                ->route('platform.reports')
                 ->title('Admin')
-                ->badge(function () {
-                    return 6;
-                })->permission('platform.systems.admin'),
+                ->permission('platform.systems.admin'),
 
             Menu::make('Administration')
                 ->icon('heart')
@@ -41,7 +39,10 @@ class PlatformProvider extends OrchidServiceProvider
                     Menu::make('Outlet Registration')->route('platform.outlets')->icon('bag')->permission('platform.systems.admin'),
                     Menu::make('Package Registration')->route('platform.packages')->icon('bag')->permission('platform.systems.admin'),
                     Menu::make('Memberships')->route('platform.memberships')->icon('bag')->permission('platform.systems.admin'),
-                    Menu::make(__('Users'))->icon('user')->route('platform.systems.users')->permission('platform.systems.admin'),
+                    Menu::make(__('Users'))
+                        ->icon('user')
+                        ->route('platform.systems.users')
+                        ->permission('platform.systems.admin'),
                     Menu::make(__('Roles'))
                         ->icon('lock')
                         ->route('platform.systems.roles')
@@ -60,22 +61,18 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make('Invoices')
                 ->icon('list')
-                ->route('platform.example.editors')->permission('platform.systems.cashier'),
+                ->route('platform.invoices')->permission('platform.systems.cashier'),
 
             // Owner Permissions Required
             Menu::make('Company Overview')
                 ->title('Overview')
                 ->icon('layers')
-                ->route('platform.example.layouts')->permission('platform.systems.owner'),
+                ->route('platform.overview')->permission('platform.systems.owner'),
 
-            Menu::make('Company Chart')
-                ->icon('bar-chart')
-                ->route('platform.example.charts')->permission('platform.systems.owner'),
-
-            Menu::make('Blog')
-                ->icon('grid')
-                ->route('platform.example.cards')
-                ->divider()->permission('platform.systems.owner'),
+            Menu::make('Company Reports')
+                ->icon('monitor')
+                ->route('platform.reports')
+                ->permission('platform.systems.owner'),
 
             // Menu::make('Documentation')
             //     ->title('Docs')

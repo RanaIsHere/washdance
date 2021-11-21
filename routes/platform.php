@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Members;
+use App\Orchid\Screens\EditInvoiceScreen;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
 use App\Orchid\Screens\Examples\ExampleChartsScreen;
 use App\Orchid\Screens\Examples\ExampleFieldsAdvancedScreen;
@@ -10,12 +11,16 @@ use App\Orchid\Screens\Examples\ExampleFieldsScreen;
 use App\Orchid\Screens\Examples\ExampleLayoutsScreen;
 use App\Orchid\Screens\Examples\ExampleScreen;
 use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
+use App\Orchid\Screens\InvoiceScreen;
+use App\Orchid\Screens\InvoicesScreen;
 use App\Orchid\Screens\MembershipScreen;
 use App\Orchid\Screens\MembershipsScreen;
 use App\Orchid\Screens\MembersScreen;
 use App\Orchid\Screens\OutletsScreen;
+use App\Orchid\Screens\OverviewScreen;
 use App\Orchid\Screens\PackageScreen;
 use App\Orchid\Screens\PlatformScreen;
+use App\Orchid\Screens\ReportsScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
 use App\Orchid\Screens\TransactionsScreen;
@@ -57,6 +62,9 @@ Route::screen('example', ExampleScreen::class)
             ->parent('platform.index')
             ->push('Example screen');
     });
+
+Route::screen('reports', ReportsScreen::class)
+    ->name('platform.reports');
 
 Route::middleware(['access:platform.systems.admin'])->group(function () {
     Route::screen('outlets', OutletsScreen::class)
@@ -134,6 +142,20 @@ Route::middleware(['access:platform.systems.cashier'])->group(function () {
 
     Route::screen('transactions', TransactionsScreen::class)
         ->name('platform.transactions');
+
+    Route::screen('invoices', InvoicesScreen::class)
+        ->name('platform.invoices');
+
+    Route::screen('invoice/edit/{transaction?}', EditInvoiceScreen::class)
+        ->name('platform.invoice.edit');
+
+    Route::screen('invoice/{transaction?}', InvoiceScreen::class)
+        ->name('platform.invoice');
+});
+
+Route::middleware(['access:platform.systems.owner'])->group(function () {
+    Route::screen('overview', OverviewScreen::class)
+        ->name('platform.overview');
 });
 
 Route::screen('example-fields', ExampleFieldsScreen::class)->name('platform.example.fields');

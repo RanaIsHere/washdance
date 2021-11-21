@@ -29,7 +29,7 @@ class RoleListScreen extends Screen
     /**
      * @var string
      */
-    public $permission = 'platform.systems.roles';
+    public $permission = 'platform.systems.admin';
 
     /**
      * Query data.

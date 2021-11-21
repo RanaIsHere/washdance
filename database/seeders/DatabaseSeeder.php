@@ -20,5 +20,9 @@ class DatabaseSeeder extends Seeder
 
         // Basic admin account for debugging
         User::createAdmin('team_origin', 'team_origin@protonmail.com', 'admin');
+
+        // Hey! Tired of changing things every time you pull from a repository? Do this!
+        // This will prevent local changes from being made into the real repository, and that is very.. very useful.
+        // git update-index —assume-unchanged database/seeders/DatabaseSeeder.php
     }
 }
