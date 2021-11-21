@@ -63,10 +63,10 @@ Route::screen('example', ExampleScreen::class)
             ->push('Example screen');
     });
 
-Route::middleware(['access:platform.systems.admin'])->group(function () {
-    Route::screen('reports', ReportsScreen::class)
-        ->name('platform.reports');
+Route::screen('reports', ReportsScreen::class)
+    ->name('platform.reports');
 
+Route::middleware(['access:platform.systems.admin'])->group(function () {
     Route::screen('outlets', OutletsScreen::class)
         ->name('platform.outlets');
 
