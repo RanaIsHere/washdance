@@ -3,3 +3,8 @@
 # Washdance
 
 Washdance is an application designed to manage a laundromat franchise. Please keep in mind that this is a school project, thus should not be used for realistic usages in the real world.
+
+```
+    Default user: team_origin@protonmail.com
+    Password: admin
+```
